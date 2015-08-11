@@ -1,2 +1,3 @@
-# custom-button
+# CustomButton
+
 A customizable SWT button.
