@@ -1,5 +1,7 @@
 package test;
 
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,10 +37,10 @@ public class Test {
 		shell.setLayout(new FillLayout());
 
 		display = Display.getCurrent();
-
-		backgroundImage = new Image(display, "./img/eclipse32.png");
-		image = new Image(display, "./img/overview-select.png");
-		image2 = new Image(display, "./img/eclipse16.png");
+		
+		backgroundImage = new Image(display, Test.class.getClassLoader().getResourceAsStream("test/eclipse32.png"));
+		image = new Image(display, Test.class.getClassLoader().getResourceAsStream("test/overview-select.png"));
+		image2 = new Image(display, Test.class.getClassLoader().getResourceAsStream("test/eclipse16.png"));
 
 		tabFolder = new TabFolder(shell, SWT.TOP);
 
