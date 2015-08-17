@@ -2,6 +2,8 @@
 
 A customizable SWT button.
 
+![alt tag](screenshot.png)
+
 For every state of the button (normal, hover, pressed, selected, disabled) you can change:
 - background color
 - border 1 and 2 color
