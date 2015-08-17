@@ -28,3 +28,5 @@ Thanks to:
 - jaredutils (http://www.jaret.de/jaretutil/index.html) author Peter Kliem;
 - Trident (https://kenai.com/projects/trident/pages/Home) author Kirill Grouchnikov;
 - Julian Robichaux for SquareButton (https://github.com/jrobichaux/SquareButton) which I used as guideline for my CustomButton.
+ 
+Loris Securo
