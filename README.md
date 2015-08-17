@@ -2,7 +2,7 @@
 
 A customizable SWT button.
 
-![alt tag](screenshot.png)
+![alt tag](Screenshot.png)
 
 For every state of the button (normal, hover, pressed, selected, disabled) you can change:
 - background color
