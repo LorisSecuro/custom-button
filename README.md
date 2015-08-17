@@ -2,6 +2,8 @@
 
 A customizable SWT button.
 
+![alt tag](Screenshot.png)
+
 For every state of the button (normal, hover, pressed, selected, disabled) you can change:
 - background color
 - border 1 and 2 color
@@ -28,5 +30,3 @@ Thanks to:
 - jaredutils (http://www.jaret.de/jaretutil/index.html) author Peter Kliem;
 - Trident (https://kenai.com/projects/trident/pages/Home) author Kirill Grouchnikov;
 - Julian Robichaux for SquareButton (https://github.com/jrobichaux/SquareButton) which I used as guideline for my CustomButton.
- 
-Loris Securo
