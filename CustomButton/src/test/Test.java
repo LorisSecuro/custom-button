@@ -31,6 +31,7 @@ public class Test {
 
 		Shell shell = new Shell();
 		shell.setSize(480, 480);
+		shell.setText("CustomButton test");
 		shell.setLayout(new FillLayout());
 
 		display = Display.getCurrent();
