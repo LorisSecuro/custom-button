@@ -23,6 +23,8 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  * @author Peter Kliem
  * @version $Id: TextRenderer.java 623 2007-11-01 15:23:45Z kliem $
+ * 
+ *          Modified by Loris Securo for CustomButton
  */
 public class TextRenderer {
 	public static final int LEFT = 0;
@@ -57,8 +59,7 @@ public class TextRenderer {
 		if (height < rect.height) {
 			if (valign == CENTER) {
 				offy = (rect.height - height) / 2;
-			}
-			else if (valign == BOTTOM) {
+			} else if (valign == BOTTOM) {
 				offy = rect.height - height;
 			}
 		}
@@ -130,8 +131,7 @@ public class TextRenderer {
 			}
 
 			return brokenLines;
-		}
-		else {
+		} else {
 			return result;
 		}
 	}
@@ -163,29 +163,25 @@ public class TextRenderer {
 		String testString;
 		if (buf.length() > 0) {
 			testString = " " + token;
-		}
-		else {
+		} else {
 			testString = token;
 		}
 
 		if (SwtGraphicsHelper.getStringDrawingWidth(gc, buf.toString()
 				+ testString) < width) {
 			buf.append(testString);
-		}
-		else if (buf.length() == 0) {
+		} else if (buf.length() == 0) {
 			// a single word did not fit
 			List<String> brWord = breakWord(gc, width, token);
 			if (brWord.size() == 1) {
 				result.add(brWord.get(0));
-			}
-			else {
+			} else {
 				for (int i = 0; i < (brWord.size() - 1); i++) {
 					result.add(brWord.get(i));
 				}
 				addToken(gc, width, buf, brWord.get(brWord.size() - 1), result);
 			}
-		}
-		else {
+		} else {
 			result.add(buf.toString());
 			buf.setLength(0);
 			addToken(gc, width, buf, token, result);
@@ -214,8 +210,7 @@ public class TextRenderer {
 				}
 				result.add(word.substring(bidx, eidx));
 				bidx = eidx;
-			}
-			else if (eidx == word.length()) {
+			} else if (eidx == word.length()) {
 				result.add(word.substring(bidx, eidx));
 			}
 		}

@@ -27,6 +27,10 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/*
+ * Added method "setPropertyValues" - Loris Securo for CustomButton
+ */
 package org.pushingpixels.trident;
 
 import java.util.ArrayList;
@@ -212,15 +216,14 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 						&& (Timeline.this.uiToolkitHandler != null)) {
 					Timeline.this.uiToolkitHandler.runOnUIThread(mainObject,
 							new Runnable() {
-						@Override
-						public void run() {
-							callback.onTimelineStateChanged(oldState,
-									newState, durationFraction,
-									timelinePosition);
-						}
-					});
-				}
-				else {
+								@Override
+								public void run() {
+									callback.onTimelineStateChanged(oldState,
+											newState, durationFraction,
+											timelinePosition);
+								}
+							});
+				} else {
 					callback.onTimelineStateChanged(oldState, newState,
 							durationFraction, timelinePosition);
 				}
@@ -249,19 +252,18 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 						&& (Timeline.this.uiToolkitHandler != null)) {
 					Timeline.this.uiToolkitHandler.runOnUIThread(mainObject,
 							new Runnable() {
-						@Override
-						public void run() {
-							if (Timeline.this.getState() == TimelineState.CANCELLED) {
-								return;
-							}
-							// System.err.println("Timeline @"
-							// + Timeline.this.hashCode());
-							callback.onTimelinePulse(durationFraction,
-									timelinePosition);
-						}
-					});
-				}
-				else {
+								@Override
+								public void run() {
+									if (Timeline.this.getState() == TimelineState.CANCELLED) {
+										return;
+									}
+									// System.err.println("Timeline @"
+									// + Timeline.this.hashCode());
+									callback.onTimelinePulse(durationFraction,
+											timelinePosition);
+								}
+							});
+				} else {
 					// System.err.println("Timeline @" +
 					// Timeline.this.hashCode());
 					callback.onTimelinePulse(durationFraction, timelinePosition);
@@ -289,7 +291,7 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 		// the setters registered with the different addProperty
 		// APIs need to run with the matching threading policy
 		TimelineCallback setterCallback = (this.uiToolkitHandler != null) ? new UISetter()
-		: new Setter();
+				: new Setter();
 		this.callback = new Chain(setterCallback);
 
 		this.duration = 500;
@@ -390,13 +392,13 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 		}
 		TimelineEngine.getInstance().runTimelineOperation(this,
 				TimelineOperationKind.PLAY, new Runnable() {
-			@Override
-			public void run() {
-				Timeline.this.isLooping = false;
-				TimelineEngine.getInstance().play(Timeline.this, false,
-						msToSkip);
-			}
-		});
+					@Override
+					public void run() {
+						Timeline.this.isLooping = false;
+						TimelineEngine.getInstance().play(Timeline.this, false,
+								msToSkip);
+					}
+				});
 	}
 
 	public void playReverse() {
@@ -410,37 +412,37 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 		}
 		TimelineEngine.getInstance().runTimelineOperation(this,
 				TimelineOperationKind.PLAY, new Runnable() {
-			@Override
-			public void run() {
-				Timeline.this.isLooping = false;
-				TimelineEngine.getInstance().playReverse(Timeline.this,
-						false, msToSkip);
-			}
-		});
+					@Override
+					public void run() {
+						Timeline.this.isLooping = false;
+						TimelineEngine.getInstance().playReverse(Timeline.this,
+								false, msToSkip);
+					}
+				});
 	}
 
 	public void replay() {
 		TimelineEngine.getInstance().runTimelineOperation(this,
 				TimelineOperationKind.PLAY, new Runnable() {
-			@Override
-			public void run() {
-				Timeline.this.isLooping = false;
-				TimelineEngine.getInstance().play(Timeline.this, true,
-						0);
-			}
-		});
+					@Override
+					public void run() {
+						Timeline.this.isLooping = false;
+						TimelineEngine.getInstance().play(Timeline.this, true,
+								0);
+					}
+				});
 	}
 
 	public void replayReverse() {
 		TimelineEngine.getInstance().runTimelineOperation(this,
 				TimelineOperationKind.PLAY, new Runnable() {
-			@Override
-			public void run() {
-				Timeline.this.isLooping = false;
-				TimelineEngine.getInstance().playReverse(Timeline.this,
-						true, 0);
-			}
-		});
+					@Override
+					public void run() {
+						Timeline.this.isLooping = false;
+						TimelineEngine.getInstance().playReverse(Timeline.this,
+								true, 0);
+					}
+				});
 	}
 
 	public void playLoop(RepeatBehavior repeatBehavior) {
@@ -464,15 +466,15 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 		}
 		TimelineEngine.getInstance().runTimelineOperation(this,
 				TimelineOperationKind.PLAY, new Runnable() {
-			@Override
-			public void run() {
-				Timeline.this.isLooping = true;
-				Timeline.this.repeatCount = loopCount;
-				Timeline.this.repeatBehavior = repeatBehavior;
-				TimelineEngine.getInstance().playLoop(Timeline.this,
-						msToSkip);
-			}
-		});
+					@Override
+					public void run() {
+						Timeline.this.isLooping = true;
+						Timeline.this.repeatCount = loopCount;
+						Timeline.this.repeatBehavior = repeatBehavior;
+						TimelineEngine.getInstance().playLoop(Timeline.this,
+								msToSkip);
+					}
+				});
 	}
 
 	/**
@@ -638,7 +640,6 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 		return this.mainObject;
 	}
 
-	// lorsec
 	public <T> void setPropertyValues(int index, T from, T to) {
 		propertiesToInterpolate.get(index).setValues(from, to);
 	}
