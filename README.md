@@ -21,6 +21,8 @@ You can show 2 images, one on the front and one in the background, in both cases
 If you specify a text as well as an image to display, you can organize their position in 5 different ways.
 You can also specify a horizontal and vertical alignment for both the text and the image.
 
+A test application is avaible to showcase the various features.
+
 The button is composed of:
 - CustomButton, the main project;
 - a largely modified version of TextRenderer from jaretutil (v0.32), for the text wrapping functionality;
