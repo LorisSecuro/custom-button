@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 package customButton;
 
@@ -65,6 +65,10 @@ public class CustomButton extends Canvas {
 	Image image;
 	int marginWidth = 1;
 	int marginHeight = 1;
+	int imageMarginX = 0;
+	int imageMarginY = 0;
+	double imageMarginCoeffX = 1.0;
+	double imageMarginCoeffY = 1.0;
 
 	Color background;
 	Color backgroundHover;
@@ -124,8 +128,6 @@ public class CustomButton extends Canvas {
 	final int BORDER_TRANSITION = 1;
 	final int BORDER2_TRANSITION = 2;
 	final int FOREGROUND_TRANSITION = 3;
-
-	Color background2;
 
 	boolean roundedCorners = false;
 
@@ -466,8 +468,6 @@ public class CustomButton extends Canvas {
 		textBackgroundPressed = null;
 		textBackgroundDisabled = null;
 		textBackgroundSelected = null;
-
-		background2 = getSavedColor(122, 209, 255);
 	}
 
 	// get colors
@@ -642,6 +642,27 @@ public class CustomButton extends Canvas {
 		}
 
 		if (image != null) {
+			if (imageMarginX > 0) {
+				imageRectangle.x += imageMarginX;
+				imageRectangle.width -= (imageMarginX * 2);
+			}
+			if (imageMarginY > 0) {
+				imageRectangle.y += imageMarginY;
+				imageRectangle.height -= (imageMarginY * 2);
+			}
+
+			if (imageMarginCoeffX > 0.0 && imageMarginCoeffX < 1.0) {
+				int originalWidth = imageRectangle.width;
+				imageRectangle.width *= imageMarginCoeffX;
+				imageRectangle.x += ((originalWidth - imageRectangle.width) / 2);
+			}
+
+			if (imageMarginCoeffY > 0.0 && imageMarginCoeffY < 1.0) {
+				int originalHeight = imageRectangle.height;
+				imageRectangle.height *= imageMarginCoeffY;
+				imageRectangle.y += ((originalHeight - imageRectangle.height) / 2);
+			}
+
 			drawImage(gc, image, imageStyle, imageHorizontalAlignment,
 					imageVerticalAlignment, imageRectangle);
 		}
@@ -1348,15 +1369,6 @@ public class CustomButton extends Canvas {
 		redraw();
 	}
 
-	public Color getBackground2() {
-		return background2;
-	}
-
-	public void setBackground2(Color background2) {
-		this.background2 = background2;
-		redraw();
-	}
-
 	public void setColorTransition(boolean enable) {
 		colorTransition = enable;
 	}
@@ -1519,6 +1531,42 @@ public class CustomButton extends Canvas {
 
 	public void setImageToTextRatio(double imageToTextRatio) {
 		this.imageToTextRatio = imageToTextRatio;
+		redraw();
+	}
+
+	public int getImageMarginX() {
+		return imageMarginX;
+	}
+
+	public void setImageMarginX(int imageMarginX) {
+		this.imageMarginX = imageMarginX;
+		redraw();
+	}
+
+	public int getImageMarginY() {
+		return imageMarginY;
+	}
+
+	public void setImageMarginY(int imageMarginY) {
+		this.imageMarginY = imageMarginY;
+		redraw();
+	}
+
+	public double getImageMarginCoeffX() {
+		return imageMarginCoeffX;
+	}
+
+	public void setImageMarginCoeffX(double imageMarginCoeffX) {
+		this.imageMarginCoeffX = imageMarginCoeffX;
+		redraw();
+	}
+
+	public double getImageMarginCoeffY() {
+		return imageMarginCoeffY;
+	}
+
+	public void setImageMarginCoeffY(double imageMarginCoeffY) {
+		this.imageMarginCoeffY = imageMarginCoeffY;
 		redraw();
 	}
 

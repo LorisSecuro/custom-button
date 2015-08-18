@@ -35,10 +35,13 @@ public class Test {
 		shell.setLayout(new FillLayout());
 
 		display = Display.getCurrent();
-		
-		backgroundImage = new Image(display, Test.class.getClassLoader().getResourceAsStream("test/eclipse32.png"));
-		image = new Image(display, Test.class.getClassLoader().getResourceAsStream("test/overview-select.png"));
-		image2 = new Image(display, Test.class.getClassLoader().getResourceAsStream("test/eclipse16.png"));
+
+		backgroundImage = new Image(display, Test.class.getClassLoader()
+				.getResourceAsStream("test/eclipse32.png"));
+		image = new Image(display, Test.class.getClassLoader()
+				.getResourceAsStream("test/overview-select.png"));
+		image2 = new Image(display, Test.class.getClassLoader()
+				.getResourceAsStream("test/eclipse16.png"));
 
 		tabFolder = new TabFolder(shell, SWT.TOP);
 
@@ -46,6 +49,7 @@ public class Test {
 		imagesTab();
 		text_imagesTab();
 		alignmentsTab();
+		imageMarginsTab();
 		layoutTab();
 
 		shell.open();
@@ -400,10 +404,61 @@ public class Test {
 		alignmentsButton5
 				.setToolTipText("Image alignment bottom/left + text alignment right");
 
+		alignmentsContent.pack();
+	}
+
+	private static void imageMarginsTab() {
+		TabItem imageMarginsTab = new TabItem(tabFolder, 0);
+		imageMarginsTab.setText("Image margins");
+		ScrolledComposite imageMarginsContentScroll = new ScrolledComposite(
+				tabFolder, SWT.H_SCROLL | SWT.V_SCROLL);
+		imageMarginsTab.setControl(imageMarginsContentScroll);
+
+		Composite imageMarginsContent = new Composite(
+				imageMarginsContentScroll, 0);
+		imageMarginsContentScroll.setContent(imageMarginsContent);
+
+		Label info = new Label(imageMarginsContent, 0);
+		info.setText("Check the tooltips for more infos!");
+		info.setBounds(5, 5, xSize, 20);
+
+		yPos = 30;
+
+		final CustomButton noMarginsButton = new CustomButton(
+				imageMarginsContent, 0);
+		noMarginsButton.setBounds(0, yPos, xSize, ySize);
+		noMarginsButton.setImage(image);
+		noMarginsButton.setToolTipText("Standard, no margins");
+
 		yPos += (ySize + yMargin);
 
-		alignmentsContent.pack();
+		final CustomButton marginsButton = new CustomButton(
+				imageMarginsContent, 0);
+		marginsButton.setBounds(0, yPos, xSize, ySize);
+		marginsButton.setImage(image);
+		marginsButton.setImageMarginY(5);
+		marginsButton.setToolTipText("Margin Y 5");
 
+		yPos += (ySize + yMargin);
+
+		final CustomButton marginsButton2 = new CustomButton(
+				imageMarginsContent, 0);
+		marginsButton2.setBounds(0, yPos, xSize, ySize);
+		marginsButton2.setImage(image);
+		marginsButton2.setImageMarginCoeffY(0.5);
+		marginsButton2.setToolTipText("Margin Coeff Y 0.5");
+
+		yPos += (ySize + yMargin);
+
+		final CustomButton marginsButton3 = new CustomButton(
+				imageMarginsContent, 0);
+		marginsButton3.setBounds(0, yPos, xSize, ySize);
+		marginsButton3.setImage(image);
+		marginsButton3.setImageMarginY(5);
+		marginsButton3.setImageMarginCoeffY(0.5);
+		marginsButton3.setToolTipText("Margin Y 5 + Margin Coeff Y 0.5");
+
+		imageMarginsContent.pack();
 	}
 
 	private static void layoutTab() {
@@ -425,6 +480,8 @@ public class Test {
 				0);
 		bkimg_imageButton.setBackgroundImage(backgroundImage);
 		bkimg_imageButton.setImage(image);
+		bkimg_imageButton
+				.setToolTipText("Background image + image default style (CB_IMAGE_STRETCH_KEEP_PROPORTIONS)");
 
 		final CustomButton textImageButton2 = new CustomButton(layoutContent, 0);
 		textImageButton2.setText("Right/left, 0.2");
@@ -432,6 +489,8 @@ public class Test {
 		textImageButton2
 				.setImageAndTextMode(CustomButton.CB_IMAGETEXT_RIGHT_LEFT);
 		textImageButton2.setImageToTextRatio(0.2);
+		textImageButton2
+				.setToolTipText("Text + image, CB_IMAGETEXT_RIGHT_LEFT, imageToTextRatio = 0.2");
 
 		final CustomButton alignmentsButton5 = new CustomButton(layoutContent,
 				0);
@@ -444,7 +503,14 @@ public class Test {
 		alignmentsButton5
 				.setImageVerticalAlignment(CustomButton.CB_ALIGNMENT_BOTTOM);
 		alignmentsButton5.setImageStyle(CustomButton.CB_IMAGE_ORIGINAL);
+		alignmentsButton5
+				.setToolTipText("Image alignment bottom/left + text alignment right");
 
+		final CustomButton marginsButton3 = new CustomButton(layoutContent, 0);
+		marginsButton3.setImage(image);
+		marginsButton3.setImageMarginY(5);
+		marginsButton3.setImageMarginCoeffY(0.5);
+		marginsButton3.setToolTipText("Margin Y 5 + Margin Coeff Y 0.5");
 	}
 
 	private static void setColors(CustomButton customButton) {
