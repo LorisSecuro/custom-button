@@ -173,6 +173,8 @@ public class CustomButton extends Canvas {
 
 	State state = State.NORMAL;
 
+	int textLineSpacing = 0;
+
 	public CustomButton(Composite parent, int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
@@ -701,7 +703,7 @@ public class CustomButton extends Canvas {
 			TextRenderer.renderText(gc, textRectangle, true, false, text,
 					textRendererHorizontalAlignment,
 					textRendererVerticalAlignment,
-					textBackgroundToPaint == null);
+					textBackgroundToPaint == null, textLineSpacing);
 		}
 
 		forceRedraw = false;
@@ -1567,6 +1569,15 @@ public class CustomButton extends Canvas {
 
 	public void setImageMarginCoeffY(double imageMarginCoeffY) {
 		this.imageMarginCoeffY = imageMarginCoeffY;
+		redraw();
+	}
+
+	public int getTextLineSpacing() {
+		return textLineSpacing;
+	}
+
+	public void setTextLineSpacing(int textLineSpacing) {
+		this.textLineSpacing = textLineSpacing;
 		redraw();
 	}
 

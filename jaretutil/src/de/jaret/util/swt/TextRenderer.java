@@ -40,12 +40,12 @@ public class TextRenderer {
 
 	public static void renderText(GC gc, Rectangle rect, boolean wrap,
 			boolean ellipsis, String text, int halign, int valign) {
-		renderText(gc, rect, wrap, ellipsis, text, LEFT, TOP, true);
+		renderText(gc, rect, wrap, ellipsis, text, halign, valign, true, 3);
 	}
 
 	public static void renderText(GC gc, Rectangle rect, boolean wrap,
 			boolean ellipsis, String text, int halign, int valign,
-			boolean isTransparent) {
+			boolean isTransparent, int lineSpacing) {
 		Rectangle clipSave = gc.getClipping();
 		gc.setClipping(rect.intersection(clipSave));
 		List<String> lines = breakInLines(gc, rect.width, wrap, text);
@@ -54,7 +54,7 @@ public class TextRenderer {
 		// System.out.println(string);
 		// }
 		//
-		int height = getHeight(gc, rect.width, wrap, lines);
+		int height = getHeight(gc, rect.width, wrap, lines, lineSpacing);
 		int offy = 0;
 		if (height < rect.height) {
 			if (valign == CENTER) {
@@ -65,7 +65,6 @@ public class TextRenderer {
 		}
 
 		int lineheight = SwtGraphicsHelper.getStringDrawingHeight(gc, "WgyAqQ");
-		int lineSpacing = 3;
 		for (int row = 0; row < lines.size(); row++) {
 			int y = rect.y + (row * lineheight) + (row * lineSpacing);
 			drawLine(gc, rect.x, y + offy, rect.width, lines.get(row), halign,
@@ -77,17 +76,16 @@ public class TextRenderer {
 
 	public static int getHeight(GC gc, int width, boolean wrap, String text) {
 		List<String> lines = breakInLines(gc, width, wrap, text);
-		return getHeight(gc, width, wrap, lines);
+		return getHeight(gc, width, wrap, lines, 3);
 	}
 
 	private static int getHeight(GC gc, int width, boolean wrap,
-			List<String> lines) {
+			List<String> lines, int lineSpacing) {
 		if (lines.size() == 0) {
 			return 0;
 		}
 		int lineheight = SwtGraphicsHelper.getStringDrawingHeight(gc,
 				lines.get(0));
-		int lineSpacing = 3;
 		int height = (lines.size() * lineheight)
 				+ ((lines.size() - 1) * lineSpacing);
 		return height;
