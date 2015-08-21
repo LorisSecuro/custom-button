@@ -69,6 +69,11 @@ public class CustomButton extends Canvas {
 	int imageMarginY = 0;
 	double imageMarginCoeffX = 1.0;
 	double imageMarginCoeffY = 1.0;
+	int textMarginX = 0;
+	int textMarginY = 0;
+	double textMarginCoeffX = 1.0;
+	double textMarginCoeffY = 1.0;
+	boolean textResize = false;
 
 	Color background;
 	Color backgroundHover;
@@ -644,26 +649,9 @@ public class CustomButton extends Canvas {
 		}
 
 		if (image != null) {
-			if (imageMarginX > 0) {
-				imageRectangle.x += imageMarginX;
-				imageRectangle.width -= (imageMarginX * 2);
-			}
-			if (imageMarginY > 0) {
-				imageRectangle.y += imageMarginY;
-				imageRectangle.height -= (imageMarginY * 2);
-			}
 
-			if (imageMarginCoeffX > 0.0 && imageMarginCoeffX < 1.0) {
-				int originalWidth = imageRectangle.width;
-				imageRectangle.width *= imageMarginCoeffX;
-				imageRectangle.x += ((originalWidth - imageRectangle.width) / 2);
-			}
-
-			if (imageMarginCoeffY > 0.0 && imageMarginCoeffY < 1.0) {
-				int originalHeight = imageRectangle.height;
-				imageRectangle.height *= imageMarginCoeffY;
-				imageRectangle.y += ((originalHeight - imageRectangle.height) / 2);
-			}
+			applyMargins(imageRectangle, imageMarginX, imageMarginY,
+					imageMarginCoeffX, imageMarginCoeffY);
 
 			drawImage(gc, image, imageStyle, imageHorizontalAlignment,
 					imageVerticalAlignment, imageRectangle);
@@ -671,6 +659,10 @@ public class CustomButton extends Canvas {
 
 		// text
 		if (text != null) {
+
+			applyMargins(textRectangle, textMarginX, textMarginY,
+					textMarginCoeffX, textMarginCoeffY);
+
 			// text color
 			if (!colorTransition || forceRedraw) {
 				foregroundToPaint = getForegroundState();
@@ -703,10 +695,36 @@ public class CustomButton extends Canvas {
 			TextRenderer.renderText(gc, textRectangle, true, false, text,
 					textRendererHorizontalAlignment,
 					textRendererVerticalAlignment,
-					textBackgroundToPaint == null, textLineSpacing);
+					textBackgroundToPaint == null, textLineSpacing, textResize);
 		}
 
 		forceRedraw = false;
+	}
+
+	private void applyMargins(Rectangle rectangle, int marginX, int marginY,
+			double marginCoeffX, double marginCoeffY) {
+
+		if (marginX > 0) {
+			rectangle.x += marginX;
+			rectangle.width -= (marginX * 2);
+		}
+		if (marginY > 0) {
+			rectangle.y += marginY;
+			rectangle.height -= (marginY * 2);
+		}
+
+		if (marginCoeffX > 0.0 && marginCoeffX < 1.0) {
+			int originalWidth = rectangle.width;
+			rectangle.width *= marginCoeffX;
+			rectangle.x += ((originalWidth - rectangle.width) / 2);
+		}
+
+		if (marginCoeffY > 0.0 && marginCoeffY < 1.0) {
+			int originalHeight = rectangle.height;
+			rectangle.height *= marginCoeffY;
+			rectangle.y += ((originalHeight - rectangle.height) / 2);
+		}
+
 	}
 
 	private void drawImage(GC gc, Image image, int style,
@@ -1572,12 +1590,57 @@ public class CustomButton extends Canvas {
 		redraw();
 	}
 
+	public int getTextMarginX() {
+		return textMarginX;
+	}
+
+	public void setTextMarginX(int textMarginX) {
+		this.textMarginX = textMarginX;
+		redraw();
+	}
+
+	public int getTextMarginY() {
+		return textMarginY;
+	}
+
+	public void setTextMarginY(int textMarginY) {
+		this.textMarginY = textMarginY;
+		redraw();
+	}
+
+	public double getTextMarginCoeffX() {
+		return textMarginCoeffX;
+	}
+
+	public void setTextMarginCoeffX(double textMarginCoeffX) {
+		this.textMarginCoeffX = textMarginCoeffX;
+		redraw();
+	}
+
+	public double getTextMarginCoeffY() {
+		return textMarginCoeffY;
+	}
+
+	public void setTextMarginCoeffY(double textMarginCoeffY) {
+		this.textMarginCoeffY = textMarginCoeffY;
+		redraw();
+	}
+
 	public int getTextLineSpacing() {
 		return textLineSpacing;
 	}
 
 	public void setTextLineSpacing(int textLineSpacing) {
 		this.textLineSpacing = textLineSpacing;
+		redraw();
+	}
+
+	public boolean getTextResize() {
+		return textResize;
+	}
+
+	public void setTextResize(boolean textResize) {
+		this.textResize = textResize;
 		redraw();
 	}
 

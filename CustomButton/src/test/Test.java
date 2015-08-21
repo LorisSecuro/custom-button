@@ -471,6 +471,10 @@ public class Test {
 
 		final CustomButton defaultButton = new CustomButton(layoutContent, 0);
 		defaultButton.setText("Default");
+		/*
+		 * defaultButton .setFont(new Font(display, "Comic Sans MS", 20,
+		 * SWT.ITALIC));
+		 */
 
 		final CustomButton customButton1 = new CustomButton(layoutContent, 0);
 		customButton1.setText("Messing with colors");
