@@ -49,7 +49,7 @@ public class Test {
 		imagesTab();
 		text_imagesTab();
 		alignmentsTab();
-		imageMarginsTab();
+		marginsTab();
 		layoutTab();
 
 		shell.open();
@@ -407,33 +407,30 @@ public class Test {
 		alignmentsContent.pack();
 	}
 
-	private static void imageMarginsTab() {
-		TabItem imageMarginsTab = new TabItem(tabFolder, 0);
-		imageMarginsTab.setText("Image margins");
-		ScrolledComposite imageMarginsContentScroll = new ScrolledComposite(
+	private static void marginsTab() {
+		TabItem marginsTab = new TabItem(tabFolder, 0);
+		marginsTab.setText("Margins");
+		ScrolledComposite marginsContentScroll = new ScrolledComposite(
 				tabFolder, SWT.H_SCROLL | SWT.V_SCROLL);
-		imageMarginsTab.setControl(imageMarginsContentScroll);
+		marginsTab.setControl(marginsContentScroll);
 
-		Composite imageMarginsContent = new Composite(
-				imageMarginsContentScroll, 0);
-		imageMarginsContentScroll.setContent(imageMarginsContent);
+		Composite marginsContent = new Composite(marginsContentScroll, 0);
+		marginsContentScroll.setContent(marginsContent);
 
-		Label info = new Label(imageMarginsContent, 0);
+		Label info = new Label(marginsContent, 0);
 		info.setText("Check the tooltips for more infos!");
 		info.setBounds(5, 5, xSize, 20);
 
 		yPos = 30;
 
-		final CustomButton noMarginsButton = new CustomButton(
-				imageMarginsContent, 0);
+		final CustomButton noMarginsButton = new CustomButton(marginsContent, 0);
 		noMarginsButton.setBounds(0, yPos, xSize, ySize);
 		noMarginsButton.setImage(image);
 		noMarginsButton.setToolTipText("Standard, no margins");
 
 		yPos += (ySize + yMargin);
 
-		final CustomButton marginsButton = new CustomButton(
-				imageMarginsContent, 0);
+		final CustomButton marginsButton = new CustomButton(marginsContent, 0);
 		marginsButton.setBounds(0, yPos, xSize, ySize);
 		marginsButton.setImage(image);
 		marginsButton.setImageMarginY(5);
@@ -441,8 +438,7 @@ public class Test {
 
 		yPos += (ySize + yMargin);
 
-		final CustomButton marginsButton2 = new CustomButton(
-				imageMarginsContent, 0);
+		final CustomButton marginsButton2 = new CustomButton(marginsContent, 0);
 		marginsButton2.setBounds(0, yPos, xSize, ySize);
 		marginsButton2.setImage(image);
 		marginsButton2.setImageMarginCoeffY(0.5);
@@ -450,15 +446,39 @@ public class Test {
 
 		yPos += (ySize + yMargin);
 
-		final CustomButton marginsButton3 = new CustomButton(
-				imageMarginsContent, 0);
+		final CustomButton marginsButton3 = new CustomButton(marginsContent, 0);
 		marginsButton3.setBounds(0, yPos, xSize, ySize);
 		marginsButton3.setImage(image);
 		marginsButton3.setImageMarginY(5);
 		marginsButton3.setImageMarginCoeffY(0.5);
 		marginsButton3.setToolTipText("Margin Y 5 + Margin Coeff Y 0.5");
 
-		imageMarginsContent.pack();
+		yPos += (ySize + yMargin);
+
+		final CustomButton marginsButton4 = new CustomButton(marginsContent, 0);
+		marginsButton4.setBounds(0, yPos, xSize, ySize);
+		marginsButton4.setText("Text margin X fixed 50");
+		marginsButton4.setTextMarginX(50);
+		marginsButton4.setToolTipText("Text margin X fixed 50");
+
+		yPos += (ySize + yMargin);
+
+		final CustomButton marginsButton5 = new CustomButton(marginsContent, 0);
+		marginsButton5.setBounds(0, yPos, xSize, ySize);
+		marginsButton5.setText("Text margin Coeff X 0.5");
+		marginsButton5.setTextMarginCoeffX(0.5);
+		marginsButton5.setToolTipText("Margin Coeff X 0.5");
+
+		yPos += (ySize + yMargin);
+
+		final CustomButton marginsButton6 = new CustomButton(marginsContent, 0);
+		marginsButton6.setBounds(0, yPos, xSize, ySize);
+		marginsButton6.setText("Margin X 30 + Coeff X 0.5");
+		marginsButton6.setTextMarginX(30);
+		marginsButton6.setTextMarginCoeffX(0.5);
+		marginsButton6.setToolTipText("Margin X 30 + Margin Coeff X 0.5");
+
+		marginsContent.pack();
 	}
 
 	private static void layoutTab() {
@@ -515,6 +535,12 @@ public class Test {
 		marginsButton3.setImageMarginY(5);
 		marginsButton3.setImageMarginCoeffY(0.5);
 		marginsButton3.setToolTipText("Margin Y 5 + Margin Coeff Y 0.5");
+
+		final CustomButton marginsButton6 = new CustomButton(layoutContent, 0);
+		marginsButton6.setText("Margin X 30 + Coeff X 0.5");
+		marginsButton6.setTextMarginX(30);
+		marginsButton6.setTextMarginCoeffX(0.5);
+		marginsButton6.setToolTipText("Margin X 30 + Margin Coeff X 0.5");
 	}
 
 	private static void setColors(CustomButton customButton) {
