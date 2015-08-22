@@ -135,6 +135,7 @@ public class CustomButton extends Canvas {
 	final int FOREGROUND_TRANSITION = 3;
 
 	boolean roundedCorners = false;
+	int roundedCornersRadius = 6;
 
 	Font font;
 
@@ -502,6 +503,8 @@ public class CustomButton extends Canvas {
 			gc.setAdvanced(true);
 			gc.setAntialias(SWT.ON);
 
+			int border2WidthToPaint = 0;
+
 			// border
 			int borderWidthToPaint = getBorderWidthState();
 			if (borderWidthToPaint > 0) {
@@ -511,11 +514,11 @@ public class CustomButton extends Canvas {
 				}
 				gc.setBackground(borderToPaint);
 
-				int arcHeight = Math.max(5, insideRectangle.height / 8);
-				int arcWidth = arcHeight;
+				int arcRadiusHeight = roundedCornersRadius;
+				int arcRadiusWidth = arcRadiusHeight;
 				gc.fillRoundRectangle(insideRectangle.x, insideRectangle.y,
 						insideRectangle.width, insideRectangle.height,
-						arcWidth, arcHeight);
+						arcRadiusWidth * 2, arcRadiusHeight * 2);
 
 				insideRectangle = new Rectangle(insideRectangle.x
 						+ borderWidthToPaint, insideRectangle.y
@@ -524,7 +527,7 @@ public class CustomButton extends Canvas {
 						- (2 * borderWidthToPaint));
 
 				// border 2
-				int border2WidthToPaint = getBorder2WidthState();
+				border2WidthToPaint = getBorder2WidthState();
 				if (border2WidthToPaint > 0) {
 
 					if (!colorTransition || forceRedraw) {
@@ -532,11 +535,11 @@ public class CustomButton extends Canvas {
 					}
 					gc.setBackground(border2ToPaint);
 
-					arcHeight = Math.max(4, insideRectangle.height / 9);
-					arcWidth = arcHeight;
+					arcRadiusHeight = (int) ((double) roundedCornersRadius - (((double) borderWidthToPaint / 2) + ((double) border2WidthToPaint / 2)));
+					arcRadiusWidth = arcRadiusHeight;
 					gc.fillRoundRectangle(insideRectangle.x, insideRectangle.y,
 							insideRectangle.width, insideRectangle.height,
-							arcWidth, arcHeight);
+							arcRadiusWidth * 2, arcRadiusHeight * 2);
 					insideRectangle = new Rectangle(insideRectangle.x
 							+ border2WidthToPaint, insideRectangle.y
 							+ border2WidthToPaint, insideRectangle.width
@@ -549,11 +552,11 @@ public class CustomButton extends Canvas {
 				backgroundToPaint = getBackgroundState();
 			}
 			gc.setBackground(backgroundToPaint);
-			int arcHeight = Math.max(3, insideRectangle.height / 10);
-			int arcWidth = arcHeight;
+			int arcRadiusHeight = (int) ((double) roundedCornersRadius - (((double) borderWidthToPaint / 2) + ((double) border2WidthToPaint)));
+			int arcRadiusWidth = arcRadiusHeight;
 			gc.fillRoundRectangle(insideRectangle.x, insideRectangle.y,
-					insideRectangle.width, insideRectangle.height, arcWidth,
-					arcHeight);
+					insideRectangle.width, insideRectangle.height,
+					arcRadiusWidth * 2, arcRadiusHeight * 2);
 
 			gc.setAntialias(SWT.DEFAULT);
 			gc.setAdvanced(false);
@@ -1459,6 +1462,15 @@ public class CustomButton extends Canvas {
 
 	public void setRoundedCorners(boolean roundedCorners) {
 		this.roundedCorners = roundedCorners;
+		redraw();
+	}
+
+	public int getRoundedCornersRadius() {
+		return roundedCornersRadius;
+	}
+
+	public void setRoundedCornersRadius(int roundedCornersRadius) {
+		this.roundedCornersRadius = roundedCornersRadius;
 		redraw();
 	}
 

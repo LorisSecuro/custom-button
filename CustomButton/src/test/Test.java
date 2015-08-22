@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -51,6 +52,7 @@ public class Test {
 		alignmentsTab();
 		marginsTab();
 		layoutTab();
+		otherTab();
 
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -491,10 +493,6 @@ public class Test {
 
 		final CustomButton defaultButton = new CustomButton(layoutContent, 0);
 		defaultButton.setText("Default");
-		/*
-		 * defaultButton .setFont(new Font(display, "Comic Sans MS", 20,
-		 * SWT.ITALIC));
-		 */
 
 		final CustomButton customButton1 = new CustomButton(layoutContent, 0);
 		customButton1.setText("Messing with colors");
@@ -541,6 +539,35 @@ public class Test {
 		marginsButton6.setTextMarginX(30);
 		marginsButton6.setTextMarginCoeffX(0.5);
 		marginsButton6.setToolTipText("Margin X 30 + Margin Coeff X 0.5");
+	}
+
+	private static void otherTab() {
+		TabItem otherTab = new TabItem(tabFolder, 0);
+		otherTab.setText("Other");
+
+		Composite otherContent = new Composite(tabFolder, 0);
+		otherContent.setLayout(new FillLayout(SWT.VERTICAL));
+		otherTab.setControl(otherContent);
+
+		final CustomButton roundedButton = new CustomButton(otherContent, 0);
+		roundedButton.setText("Rounded corners default");
+		roundedButton.setRoundedCorners(true);
+
+		final CustomButton roundedButton2 = new CustomButton(otherContent, 0);
+		roundedButton2.setText("Rounded corners radius 20");
+		roundedButton2.setRoundedCorners(true);
+		roundedButton2.setRoundedCornersRadius(20);
+
+		final CustomButton resizeTextButton = new CustomButton(otherContent, 0);
+		resizeTextButton.setText("Automatic text resize");
+		resizeTextButton.setTextResize(true);
+
+		final CustomButton resizeTextButton2 = new CustomButton(otherContent, 0);
+		resizeTextButton2.setText("Text resize + text margins + font");
+		resizeTextButton2.setTextResize(true);
+		resizeTextButton2.setFont(new Font(display, "Comic Sans MS", 8,
+				SWT.ITALIC));
+		resizeTextButton2.setTextMarginCoeffX(0.5);
 	}
 
 	private static void setColors(CustomButton customButton) {
