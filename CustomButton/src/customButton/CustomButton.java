@@ -74,6 +74,8 @@ public class CustomButton extends Canvas {
 	double textMarginCoeffX = 1.0;
 	double textMarginCoeffY = 1.0;
 	boolean textResize = false;
+	boolean isToggle = false;
+	boolean toggleStateActive = false;
 
 	Color background;
 	Color backgroundHover;
@@ -184,6 +186,10 @@ public class CustomButton extends Canvas {
 	public CustomButton(Composite parent, int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
+		if ((style & SWT.TOGGLE) != 0) {
+			isToggle = true;
+		}
+
 		// set default colors
 		setDefaultColors();
 
@@ -233,6 +239,11 @@ public class CustomButton extends Canvas {
 		addListener(SWT.MouseEnter, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
+
+				if (isToggle && state == State.PRESSED) {
+					return;
+				}
+
 				State prevState = state;
 				state = State.HOVER;
 				if (colorTransition) {
@@ -247,6 +258,10 @@ public class CustomButton extends Canvas {
 			public void handleEvent(Event e) {
 
 				if (!getEnabled()) {
+					return;
+				}
+
+				if (isToggle && state == State.PRESSED) {
 					return;
 				}
 
@@ -272,6 +287,10 @@ public class CustomButton extends Canvas {
 					return;
 				}
 
+				if (isToggle && state == State.PRESSED) {
+					return;
+				}
+
 				State prevState = state;
 				if (isMouseHovering()) {
 					state = State.HOVER;
@@ -288,6 +307,11 @@ public class CustomButton extends Canvas {
 
 			@Override
 			public void focusGained(FocusEvent e) {
+
+				if (isToggle && state == State.PRESSED) {
+					return;
+				}
+
 				State prevState = state;
 				if (isMouseHovering()) {
 					state = State.HOVER;
@@ -354,17 +378,29 @@ public class CustomButton extends Canvas {
 			doButtonClicked();
 		}
 
+		if (isToggle) {
+			if (!toggleStateActive) {
+				toggleStateActive = true;
+				return;
+			} else {
+				toggleStateActive = false;
+			}
+		}
+
 		State prevState = state;
 		if (isMouseHovering()) {
 			state = State.HOVER;
-		} else {
+		} else if (isFocusControl()) {
 			state = State.SELECTED;
+		} else {
+			state = State.NORMAL;
 		}
 		if (colorTransition) {
 			playTransition(prevState, state);
 		} else {
 			redraw();
 		}
+
 	}
 
 	private boolean isMouseHovering() {
@@ -1659,6 +1695,23 @@ public class CustomButton extends Canvas {
 	public void forceRedraw() {
 		forceRedraw = true;
 		redraw();
+	}
+
+	public boolean getSelection() {
+		if (isToggle) {
+			return toggleStateActive;
+		}
+		return false;
+	}
+
+	public void setSelection(boolean selected) {
+		if (isToggle) {
+			// hacky bit, since pressing the button will basically do state =
+			// !actualState, we negate it so it gets negated again
+			toggleStateActive = !selected;
+			pressing();
+			releasePress(true);
+		}
 	}
 
 	/**

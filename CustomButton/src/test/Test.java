@@ -568,6 +568,10 @@ public class Test {
 		resizeTextButton2.setFont(new Font(display, "Comic Sans MS", 8,
 				SWT.ITALIC));
 		resizeTextButton2.setTextMarginCoeffX(0.5);
+
+		final CustomButton toggleButton = new CustomButton(otherContent,
+				SWT.TOGGLE);
+		toggleButton.setText("Toggle Button");
 	}
 
 	private static void setColors(CustomButton customButton) {
