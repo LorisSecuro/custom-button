@@ -376,14 +376,14 @@ public class CustomButton extends Canvas {
 	private void releasePress(boolean doPress) {
 		if (doPress) {
 			doButtonClicked();
-		}
 
-		if (isToggle) {
-			if (!toggleStateActive) {
-				toggleStateActive = true;
-				return;
-			} else {
-				toggleStateActive = false;
+			if (isToggle) {
+				if (!toggleStateActive) {
+					toggleStateActive = true;
+					return;
+				} else {
+					toggleStateActive = false;
+				}
 			}
 		}
 
