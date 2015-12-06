@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Trident
-Bundle-SymbolicName: org.pushingpixels.trident
-Bundle-Version: 1.0.0
-Export-Package: test,
- test.swt
-Require-Bundle: org.eclipse.swt
