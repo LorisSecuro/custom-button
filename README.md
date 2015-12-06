@@ -32,7 +32,7 @@ Features:
 
 - You can specify the horizontal and vertical alignments for both the text and the image
 
-- The text is automatically wrapped if the button is too small
+- The text is automatically wrapped if the button is not big enough
 
 - You can set rounded corners and change their radius
  
