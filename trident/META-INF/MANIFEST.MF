@@ -3,11 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Trident
 Bundle-SymbolicName: org.pushingpixels.trident
 Bundle-Version: 1.0.0
-Export-Package: org.pushingpixels.trident,
- org.pushingpixels.trident.callback,
- org.pushingpixels.trident.ease,
- org.pushingpixels.trident.interpolator,
- org.pushingpixels.trident.swt,
- test,
+Export-Package: test,
  test.swt
 Require-Bundle: org.eclipse.swt

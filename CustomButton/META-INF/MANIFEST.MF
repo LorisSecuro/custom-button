@@ -3,7 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CustomButton
 Bundle-SymbolicName: CustomButton
 Bundle-Version: 1.0.0
-Export-Package: customButton,
- test
-Require-Bundle: org.eclipse.jface,
+Export-Package: customButton;
+  uses:="org.eclipse.swt.events,
+   org.eclipse.swt.graphics,
+   org.pushingpixels.trident,
+   org.eclipse.swt.widgets"
+Require-Bundle: org.eclipse.swt,
+ org.eclipse.jface,
  org.eclipse.equinox.common
