@@ -2,6 +2,8 @@
 
 A customizable SWT button.
 
+Try the test application now: [Download page] (https://github.com/LorisSecuro/custom-button/releases)
+
 ![alt tag](Screenshot.png)
 
 For every state of the button (normal, hover, pressed, selected, disabled) you can change:
