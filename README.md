@@ -42,16 +42,16 @@ Features:
 
 - You can enable automatic text resizing which make the text dynamically grow and shrink depending on the size of the button and its margins 
 
-- The default style of CustomButton resemble the standard Windows 10 button.
+- The default style of CustomButton resemble the standard Windows 10 button
 
 A test application is avaible to showcase the various features: [Download page] (https://github.com/LorisSecuro/custom-button/releases)
 
 The button is composed of:
-- CustomButton, the main project;
-- a largely modified version of TextRenderer from jaretutil (v0.32), for the text wrapping functionality;
-- a slightly modified version of Trident (v1.3), for smooth color transitions.
+- CustomButton, the main project
+- a largely modified version of TextRenderer from jaretutil (v0.32), for the text wrapping functionality
+- a slightly modified version of Trident (v1.3), for smooth color transitions
 
 Thanks to:
-- jaredutils (http://www.jaret.de/jaretutil/index.html) author Peter Kliem;
-- Trident (https://kenai.com/projects/trident/pages/Home) author Kirill Grouchnikov;
-- Julian Robichaux for SquareButton (https://github.com/jrobichaux/SquareButton) which I used as guideline for my CustomButton.
+- jaredutils (http://www.jaret.de/jaretutil/index.html) author Peter Kliem
+- Trident (https://kenai.com/projects/trident/pages/Home) author Kirill Grouchnikov
+- Julian Robichaux for SquareButton (https://github.com/jrobichaux/SquareButton) which I used as guideline for my CustomButton
