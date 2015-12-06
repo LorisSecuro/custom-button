@@ -15,7 +15,7 @@ Features:
   - first border color and width
   - second border color and width
 
-- Transitions between the various colors states are made smooth, you can change their duration and even make them immediate
+- The color transitions between the various states are made smooth, you can change their duration and even make them immediate
 
 - You can show 2 images, one on the front and one in the background, in both cases you can choose 4 different styles to display them:
   - original size
