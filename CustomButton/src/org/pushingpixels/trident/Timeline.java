@@ -640,6 +640,7 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 		return this.mainObject;
 	}
 
+	// permit to dynamically change the from and to colors of a property of the transition
 	public <T> void setPropertyValues(int index, T from, T to) {
 		propertiesToInterpolate.get(index).setValues(from, to);
 	}

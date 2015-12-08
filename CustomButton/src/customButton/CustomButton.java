@@ -58,8 +58,6 @@ import de.jaret.util.swt.TextRenderer;
 
 public class CustomButton extends Canvas {
 
-	/* PRIVATE STUFF */
-
 	String text;
 	Image backgroundImage;
 	Image image;
@@ -184,15 +182,22 @@ public class CustomButton extends Canvas {
 	int textLineSpacing = 0;
 
 	public CustomButton(Composite parent, int style) {
+		
+		// double buffered to make transitions look smooth
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
+		// if received the standard swt toggle flag, it will be a toggle button
 		if ((style & SWT.TOGGLE) != 0) {
 			isToggle = true;
 		}
 
-		// set default colors
 		setDefaultColors();
 
+		// setting up the object that will create the color transitions
+		// every property is a transition of a part of the button (background, borders...)
+		// the setter will change the ...ToPaint colors and call a redraw
+		// the ...ToPaint colors are the colors that will be used during the painting of the button
+		// from and to are not relevant right now
 		transition = new Timeline(this);
 		transition.addPropertyToInterpolate(Timeline
 				.<Color> property("backgroundToPaint").from(background)
@@ -211,16 +216,19 @@ public class CustomButton extends Canvas {
 	}
 
 	private void addListeners() {
+		
 		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
+				// this is where we paint the button
 				CustomButton.this.paintControl(e);
 			}
 		});
-
+	
 		addListener(SWT.MouseDown, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
+				// pressing left click of the mouse
 				if (e.button == 1) {
 					pressing();
 				}
@@ -230,20 +238,28 @@ public class CustomButton extends Canvas {
 		addListener(SWT.MouseUp, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
+				// releasing left click of the mouse
 				if (e.button == 1) {
+					// it is pressed only when the mouse cursors is inside the button
 					releasePress(getClientArea().contains(e.x, e.y));
 				}
 			}
 		});
 
+		// mouse cursor enter inside the button
 		addListener(SWT.MouseEnter, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-
+				if (!getEnabled()) {
+					return;
+				}
+				
+				// toggle button and is pressed, nothing has to change, state will remain pressed
 				if (isToggle && state == State.PRESSED) {
 					return;
 				}
 
+				// state will be hover
 				State prevState = state;
 				state = State.HOVER;
 				if (colorTransition) {
@@ -253,18 +269,21 @@ public class CustomButton extends Canvas {
 				}
 			}
 		});
+		
+		// mouse cursor exit from the button
 		addListener(SWT.MouseExit, new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-
 				if (!getEnabled()) {
 					return;
 				}
-
+				
+				// toggle button and is pressed, nothing has to change, state will remain pressed
 				if (isToggle && state == State.PRESSED) {
 					return;
 				}
 
+				// state will be normal if it has no focus, selected otherwise
 				State prevState = state;
 				if (!isFocusControl()) {
 					state = State.NORMAL;
@@ -287,10 +306,12 @@ public class CustomButton extends Canvas {
 					return;
 				}
 
+				// toggle button and is pressed, nothing has to change, state will remain pressed
 				if (isToggle && state == State.PRESSED) {
 					return;
 				}
 
+				// state will be hover if mouse cursor is hovering, normal otherwise
 				State prevState = state;
 				if (isMouseHovering()) {
 					state = State.HOVER;
@@ -307,17 +328,23 @@ public class CustomButton extends Canvas {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-
+				if (!getEnabled()) {
+					return;
+				}
+				
+				// toggle button and is pressed, nothing has to change, state will remain pressed
 				if (isToggle && state == State.PRESSED) {
 					return;
 				}
-
+				
+				// state will be hover if mouse cursor is hovering, selected otherwise
 				State prevState = state;
 				if (isMouseHovering()) {
 					state = State.HOVER;
 				} else {
 					state = State.SELECTED;
 				}
+				
 				if (colorTransition) {
 					playTransition(prevState, state);
 				} else {
@@ -329,11 +356,14 @@ public class CustomButton extends Canvas {
 		addTraverseListener(new TraverseListener() {
 			@Override
 			public void keyTraversed(TraverseEvent e) {
+				// we decide which traverse keys to support
 				switch (e.detail) {
+				// enter pressed
 				case SWT.TRAVERSE_RETURN:
 					e.doit = true;
 					doButtonClicked();
 					break;
+				// other keys that we accept	
 				case SWT.TRAVERSE_ESCAPE:
 				case SWT.TRAVERSE_TAB_NEXT:
 				case SWT.TRAVERSE_TAB_PREVIOUS:
@@ -345,9 +375,11 @@ public class CustomButton extends Canvas {
 			}
 		});
 
+		// standard keys listener
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyReleased(KeyEvent e) {
+				// we support only the space key
 				if (e.character == ' ') {
 					releasePress(true);
 				}
@@ -355,6 +387,7 @@ public class CustomButton extends Canvas {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
+				// we support only the space key
 				if ((e.character == ' ') && (state != State.PRESSED)) {
 					pressing();
 				}
@@ -375,10 +408,13 @@ public class CustomButton extends Canvas {
 
 	private void releasePress(boolean doPress) {
 		if (doPress) {
+			// execute the action
 			doButtonClicked();
 
 			if (isToggle) {
 				if (!toggleStateActive) {
+					// the button is already in the selected state because of pressing()
+					// so we leave 
 					toggleStateActive = true;
 					return;
 				} else {
@@ -386,7 +422,13 @@ public class CustomButton extends Canvas {
 				}
 			}
 		}
+		
+		// at this point it might be disabled, for example if a button disable himself
+		if (!getEnabled()) {
+			return;
+		}
 
+		// we need to decide the state after the press
 		State prevState = state;
 		if (isMouseHovering()) {
 			state = State.HOVER;
@@ -403,13 +445,17 @@ public class CustomButton extends Canvas {
 
 	}
 
+	// return true if the mouse cursor is inside the button
 	private boolean isMouseHovering() {
+		// get the component under the mouse cursor
 		Control controlUnderMouse = Display.getCurrent().getCursorControl();
+		// return if the control is our button
 		return (controlUnderMouse instanceof CustomButton)
 				&& ((CustomButton) controlUnderMouse == CustomButton.this);
 	}
 
 	private void doButtonClicked() {
+		// basically call the selection listener
 		Event e = new Event();
 		e.item = this;
 		e.widget = this;
@@ -417,18 +463,23 @@ public class CustomButton extends Canvas {
 		notifyListeners(SWT.Selection, e);
 	}
 
+	// execute the colors transitions
 	private void playTransition(State from, State to) {
 
 		if (from == to) {
 			return;
 		}
 
+		// if there is already a transition playing, we interrupt it
 		if (transition.getState() != TimelineState.IDLE) {
 			transition.abort();
 		}
 
 		long duration = getTransitionDuration(from, to);
 		if (duration > 0) {
+			// we directly set the new colors of the transitions
+			// "from" is the actual color (...ToPaint)
+			// "to" is the color of the new state that we want to reach
 			transition.setPropertyValues(BACKGROUND_TRANSITION,
 					backgroundToPaint, getBackgroundState());
 			transition.setPropertyValues(BORDER_TRANSITION, borderToPaint,
@@ -438,12 +489,15 @@ public class CustomButton extends Canvas {
 			transition.setPropertyValues(FOREGROUND_TRANSITION,
 					foregroundToPaint, getForegroundState());
 			transition.setDuration(duration);
+			// start the transition
 			transition.play();
 		} else {
+			// if the duration is 0, we just redraw because playing the transition with duration 0 still has a delay
 			forceRedraw();
 		}
 	}
 
+	// return the transition duration between the various states
 	private long getTransitionDuration(State from, State to) {
 		if (((from == State.NORMAL) && (to == State.HOVER))
 				|| ((to == State.NORMAL) && (from == State.HOVER))) {
@@ -476,9 +530,10 @@ public class CustomButton extends Canvas {
 		return 0;
 	}
 
-	// set default colors
+	// set the standard colors 
 	private void setDefaultColors() {
 
+		// windows 10 style
 		background = getSavedColor(225, 225, 225);
 		backgroundHover = getSavedColor(229, 241, 251);
 		backgroundPressed = getSavedColor(204, 228, 247);
@@ -514,7 +569,7 @@ public class CustomButton extends Canvas {
 		textBackgroundSelected = null;
 	}
 
-	// get colors
+	// return the requested color
 	private Color getSavedColor(int r, int g, int b) {
 		String colorString = "COLOR:" + r + "-" + g + "-" + b;
 		ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
@@ -527,35 +582,46 @@ public class CustomButton extends Canvas {
 	// paint the button
 	private void paintControl(PaintEvent e) {
 
-		// get the size
+		// get the button size
 		Point size = getSize();
 
 		GC gc = e.gc;
 
+		// the area we can paint on is the button size minus the margins
 		Rectangle insideRectangle = new Rectangle(marginWidth, marginHeight,
 				size.x - (2 * marginWidth), size.y - (2 * marginHeight));
 
 		if (roundedCorners) {
+			// to avoid gaps of pixels between the rounded corners of the two borders:
+			// 1. draw a filled rounded rectangle with the border 1 color
+			// 2. inside it draw a filled rounded rectangle with the border 2 color
+			// 3. inside it draw a filled rounded rectangle with the background color
+			
+			// to make the round corners smooth and not jagged
 			gc.setAdvanced(true);
 			gc.setAntialias(SWT.ON);
 
 			int border2WidthToPaint = 0;
 
-			// border
+			// first border
+			// the width depend on the state
 			int borderWidthToPaint = getBorderWidthState();
 			if (borderWidthToPaint > 0) {
 
+				// if don't have transitions or we just wanna skip them we get the color of the actual state
+				// otherwise ...ToPaint will be continuously changed by the transition and we have just to use it 
 				if (!colorTransition || forceRedraw) {
 					borderToPaint = getBorderState();
 				}
 				gc.setBackground(borderToPaint);
-
-				int arcRadiusHeight = roundedCornersRadius;
-				int arcRadiusWidth = arcRadiusHeight;
+				
+				// draw a rounded rectangle with the size of the button with the first border color
+				// it asks for the arc length which is basically the diameter so we put radius * 2
 				gc.fillRoundRectangle(insideRectangle.x, insideRectangle.y,
 						insideRectangle.width, insideRectangle.height,
-						arcRadiusWidth * 2, arcRadiusHeight * 2);
-
+						roundedCornersRadius * 2, roundedCornersRadius * 2);
+				
+				// the new area we can paint on is itself minus the second border width 
 				insideRectangle = new Rectangle(insideRectangle.x
 						+ borderWidthToPaint, insideRectangle.y
 						+ borderWidthToPaint, insideRectangle.width
@@ -571,11 +637,19 @@ public class CustomButton extends Canvas {
 					}
 					gc.setBackground(border2ToPaint);
 
-					arcRadiusHeight = (int) ((double) roundedCornersRadius - (((double) borderWidthToPaint / 2) + ((double) border2WidthToPaint / 2)));
-					arcRadiusWidth = arcRadiusHeight;
+					// to make the rounded corners of the two borders have the right proportions between them I followed this technique:
+					// http://webdesign.tutsplus.com/tutorials/quick-tip-rounded-corners-done-right--webdesign-7127
+					// so innerRadius = outerRadius - gapBetweenCorners
+					// where gapBetweenCorners is the inner border width
+					int innerRadius = roundedCornersRadius - borderWidthToPaint;
+					
+					// draw a rounded rectangle inside our paintable area with the color of the second border
+					// basically our first border is now done, with the right color and width
 					gc.fillRoundRectangle(insideRectangle.x, insideRectangle.y,
 							insideRectangle.width, insideRectangle.height,
-							arcRadiusWidth * 2, arcRadiusHeight * 2);
+							innerRadius * 2, innerRadius * 2);
+					
+					// the new area we can paint on is itself minus the second border width 
 					insideRectangle = new Rectangle(insideRectangle.x
 							+ border2WidthToPaint, insideRectangle.y
 							+ border2WidthToPaint, insideRectangle.width
@@ -584,29 +658,38 @@ public class CustomButton extends Canvas {
 				}
 			}
 
+			// time to paint the background
 			if (!colorTransition || forceRedraw) {
 				backgroundToPaint = getBackgroundState();
 			}
 			gc.setBackground(backgroundToPaint);
-			int arcRadiusHeight = (int) ((double) roundedCornersRadius - (((double) borderWidthToPaint / 2) + ((double) border2WidthToPaint)));
-			int arcRadiusWidth = arcRadiusHeight;
+			
+			// same as border 2, but this time the gap is the sum of both borders width
+			int innerRadius = roundedCornersRadius - (borderWidthToPaint + border2WidthToPaint);
+			// draw a rounded rectangle inside our paintable area with the color of the background
+			// our button is basically done with also the border 2 with the right color and width and the background
 			gc.fillRoundRectangle(insideRectangle.x, insideRectangle.y,
 					insideRectangle.width, insideRectangle.height,
-					arcRadiusWidth * 2, arcRadiusHeight * 2);
+					innerRadius * 2, innerRadius * 2);
 
 			gc.setAntialias(SWT.DEFAULT);
 			gc.setAdvanced(false);
 		} else {
-
+			// no rounded corners
+			
 			if (!colorTransition || forceRedraw) {
 				backgroundToPaint = getBackgroundState();
 			}
 			gc.setBackground(backgroundToPaint);
+			
+			// draw the background with the size of the button
 			gc.fillRectangle(insideRectangle);
 
 			// border
 			int borderWidthToPaint = getBorderWidthState();
 			if (borderWidthToPaint > 0) {
+				
+				// set the line width as our border width
 				gc.setLineWidth(borderWidthToPaint);
 
 				if (!colorTransition || forceRedraw) {
@@ -614,13 +697,17 @@ public class CustomButton extends Canvas {
 				}
 				gc.setForeground(borderToPaint);
 
+				// the line width will be applied around the center of the line itself so we have to position ourself accordingly
+				// with borderWidth / 2
 				Rectangle borderRectangle = new Rectangle(insideRectangle.x
 						+ (borderWidthToPaint / 2), insideRectangle.y
 						+ (borderWidthToPaint / 2), insideRectangle.width
 						- borderWidthToPaint, insideRectangle.height
 						- borderWidthToPaint);
+				// draw the first border
 				gc.drawRectangle(borderRectangle);
 
+				// the new area we can paint on is itself minus the first border width 
 				insideRectangle = new Rectangle(insideRectangle.x
 						+ borderWidthToPaint, insideRectangle.y
 						+ borderWidthToPaint, insideRectangle.width
@@ -637,13 +724,17 @@ public class CustomButton extends Canvas {
 					}
 					gc.setForeground(border2ToPaint);
 
+					// the line width will be applied around the center of the line itself so we have to position ourself accordingly
+					// with borderWidth / 2
 					Rectangle border2Rectangle = new Rectangle(
 							insideRectangle.x + (border2WidthToPaint / 2),
 							insideRectangle.y + (border2WidthToPaint / 2),
 							insideRectangle.width - border2WidthToPaint,
 							insideRectangle.height - border2WidthToPaint);
+					// draw the second border
 					gc.drawRectangle(border2Rectangle);
 
+					// the new area we can paint on is itself minus the second border width
 					insideRectangle = new Rectangle(insideRectangle.x
 							+ border2WidthToPaint, insideRectangle.y
 							+ border2WidthToPaint, insideRectangle.width
@@ -654,18 +745,24 @@ public class CustomButton extends Canvas {
 		}
 
 		if (backgroundImage != null) {
+			// paint the background image
 			drawImage(gc, backgroundImage, backgroundImageStyle,
 					backgroundImageHorizontalAlignment,
 					backgroundImageVerticalAlignment, insideRectangle);
 		}
 
+		// create the areas where to position the text and the image
+		// if we don't change them, they will simply drawn on top of each other using the available space
 		Rectangle textRectangle = new Rectangle(insideRectangle.x,
 				insideRectangle.y, insideRectangle.width,
 				insideRectangle.height);
 		Rectangle imageRectangle = new Rectangle(insideRectangle.x,
 				insideRectangle.y, insideRectangle.width,
 				insideRectangle.height);
+		
+		// both image and text exists
 		if ((image != null) && (text != null)) {
+			// check which mode to display them and modify their areas accordingly using the ratio between image and text
 			if (imageAndTextMode == CB_IMAGETEXT_LEFT_RIGHT) {
 				imageRectangle.width = (int) (insideRectangle.width * imageToTextRatio);
 				textRectangle.x += imageRectangle.width;
@@ -687,8 +784,10 @@ public class CustomButton extends Canvas {
 			}
 		}
 
+		// image exist
 		if (image != null) {
 
+			// apply the margins to the image area, both fixed and coefficient
 			applyMargins(imageRectangle, imageMarginX, imageMarginY,
 					imageMarginCoeffX, imageMarginCoeffY);
 
@@ -696,9 +795,10 @@ public class CustomButton extends Canvas {
 					imageVerticalAlignment, imageRectangle);
 		}
 
-		// text
+		// text exist
 		if (text != null) {
 
+			// apply the margins to the text area, both fixed and coefficient
 			applyMargins(textRectangle, textMarginX, textMarginY,
 					textMarginCoeffX, textMarginCoeffY);
 
@@ -717,6 +817,8 @@ public class CustomButton extends Canvas {
 			// text font
 			gc.setFont(font);
 
+			// we translate our alignments in jared util alignments
+			// default are center/center
 			int textRendererHorizontalAlignment = TextRenderer.CENTER;
 			int textRendererVerticalAlignment = TextRenderer.CENTER;
 			if (textHorizontalAlignment == CB_ALIGNMENT_LEFT) {
@@ -731,6 +833,8 @@ public class CustomButton extends Canvas {
 			if (textVerticalAlignment == CB_ALIGNMENT_BOTTOM) {
 				textRendererVerticalAlignment = TextRenderer.BOTTOM;
 			}
+			
+			// draw the text
 			TextRenderer.renderText(gc, textRectangle, true, false, text,
 					textRendererHorizontalAlignment,
 					textRendererVerticalAlignment,
@@ -740,9 +844,11 @@ public class CustomButton extends Canvas {
 		forceRedraw = false;
 	}
 
+	// given a rectangle it changes it applying fixed and coefficient margins
 	private void applyMargins(Rectangle rectangle, int marginX, int marginY,
 			double marginCoeffX, double marginCoeffY) {
 
+		// fixed margins
 		if (marginX > 0) {
 			rectangle.x += marginX;
 			rectangle.width -= (marginX * 2);
@@ -752,6 +858,7 @@ public class CustomButton extends Canvas {
 			rectangle.height -= (marginY * 2);
 		}
 
+		// coefficient margins
 		if (marginCoeffX > 0.0 && marginCoeffX < 1.0) {
 			int originalWidth = rectangle.width;
 			rectangle.width *= marginCoeffX;
@@ -766,20 +873,25 @@ public class CustomButton extends Canvas {
 
 	}
 
+	// draw an image inside the given rectangle using the given style and alignments
 	private void drawImage(GC gc, Image image, int style,
 			int horizontalAlignment, int verticalAlignment, Rectangle rectangle) {
+		// make the image looks better hopefully
 		gc.setAdvanced(true);
 		gc.setAntialias(SWT.ON);
 		gc.setInterpolation(SWT.HIGH);
 
+		// we limit the paint area to the rectangle, useful for example with the tile style
 		gc.setClipping(rectangle);
 
 		Image original = image;
+		// if the button is disabled we make the image look disabled too
 		if (state == State.DISABLED) {
 			image = new Image(getDisplay(), image, SWT.IMAGE_DISABLE);
 		}
 
 		if (style == CB_IMAGE_TILE) {
+			// we use the original image size and just paint it till we have space left
 			Point imgSize = new Point(image.getImageData().width,
 					image.getImageData().height);
 			Point imgPosition = new Point(0, 0);
@@ -792,8 +904,10 @@ public class CustomButton extends Canvas {
 		}
 
 		if (style == CB_IMAGE_ORIGINAL) {
+			// we use the original image
 			Point imgSize = new Point(image.getImageData().width,
 					image.getImageData().height);
+			// we calculate the correct position given the alignments
 			Point imgPosition = calculatePosition(imgSize, rectangle,
 					horizontalAlignment, verticalAlignment);
 
@@ -802,16 +916,20 @@ public class CustomButton extends Canvas {
 		}
 
 		if (style == CB_IMAGE_STRETCH) {
+			// we just fill our paint area with the image
 			gc.drawImage(image, 0, 0, image.getImageData().width,
 					image.getImageData().height, rectangle.x, rectangle.y,
 					rectangle.width, rectangle.height);
 		}
 
 		if (style == CB_IMAGE_STRETCH_KEEP_PROPORTIONS) {
+			// we want to fit our image inside the paint area without changing the aspect ratio
+			// get our new size
 			Point imgSize = resizeAndKeepAspectRatio(
 					image.getImageData().width, image.getImageData().height,
 					rectangle.width, rectangle.height);
 
+			// we calculate the correct position given the alignments
 			Point imgPosition = calculatePosition(imgSize, rectangle,
 					horizontalAlignment, verticalAlignment);
 
@@ -821,10 +939,12 @@ public class CustomButton extends Canvas {
 		}
 
 		if (state == State.DISABLED) {
+			// we dispose the image we created
 			image.dispose();
 			image = original;
 		}
 
+		// remove the clipping
 		gc.setClipping((Rectangle) null);
 
 		gc.setInterpolation(SWT.DEFAULT);
@@ -832,12 +952,14 @@ public class CustomButton extends Canvas {
 		gc.setAdvanced(false);
 	}
 
+	// calculate the correct position inside a rectangle given the alignments
 	private Point calculatePosition(Point size, Rectangle rectangle,
 			int horizontalAlignment, int verticalAlignment) {
 
 		int imgPositionX = 0;
 		int imgPositionY = 0;
 
+		// horizontal alignment
 		if (horizontalAlignment == CB_ALIGNMENT_CENTER) {
 			imgPositionX = (rectangle.x + (rectangle.width / 2)) - (size.x / 2);
 		} else if (horizontalAlignment == CB_ALIGNMENT_LEFT) {
@@ -846,6 +968,7 @@ public class CustomButton extends Canvas {
 			imgPositionX = (rectangle.x + rectangle.width) - size.x;
 		}
 
+		// vertical alignment
 		if (verticalAlignment == CB_ALIGNMENT_CENTER) {
 			imgPositionY = (rectangle.y + (rectangle.height / 2))
 					- (size.y / 2);
@@ -865,6 +988,7 @@ public class CustomButton extends Canvas {
 		return new Point(imgPositionX, imgPositionY);
 	}
 
+	// return the color border
 	private Color getBorderState() {
 		switch (state) {
 		case NORMAL:
@@ -883,6 +1007,7 @@ public class CustomButton extends Canvas {
 		return null;
 	}
 
+	// return the border width
 	private int getBorderWidthState() {
 		switch (state) {
 		case NORMAL:
@@ -901,6 +1026,7 @@ public class CustomButton extends Canvas {
 		return 0;
 	}
 
+	// return the border 2 color
 	private Color getBorder2State() {
 		switch (state) {
 		case NORMAL:
@@ -919,6 +1045,7 @@ public class CustomButton extends Canvas {
 		return null;
 	}
 
+	// return the border 2 width
 	private int getBorder2WidthState() {
 		switch (state) {
 		case NORMAL:
@@ -937,6 +1064,7 @@ public class CustomButton extends Canvas {
 		return 0;
 	}
 
+	// return the background color
 	private Color getBackgroundState() {
 		switch (state) {
 		case NORMAL:
@@ -955,6 +1083,7 @@ public class CustomButton extends Canvas {
 		return null;
 	}
 
+	// return the foreground color
 	private Color getForegroundState() {
 		switch (state) {
 		case NORMAL:
@@ -973,6 +1102,7 @@ public class CustomButton extends Canvas {
 		return null;
 	}
 
+	// return the text background color
 	private Color getTextBackgroundState() {
 		switch (state) {
 		case NORMAL:
@@ -1038,7 +1168,7 @@ public class CustomButton extends Canvas {
 				} else {
 					redraw();
 				}
-			} else {
+			} else {		
 				state = State.DISABLED;
 				if (colorTransition) {
 					playTransition(prevState, state);
@@ -1706,8 +1836,8 @@ public class CustomButton extends Canvas {
 
 	public void setSelection(boolean selected) {
 		if (isToggle) {
-			// hacky bit, since pressing the button will basically do state =
-			// !actualState, we negate it so it gets negated again
+			// hacky bit, since pressing the button will basically do toggleStateActive =
+			// !toggleStateActive, we negate it so it gets negated again
 			toggleStateActive = !selected;
 			pressing();
 			releasePress(true);
