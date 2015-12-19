@@ -621,7 +621,7 @@ public class CustomButton extends Canvas {
 						insideRectangle.width, insideRectangle.height,
 						roundedCornersRadius * 2, roundedCornersRadius * 2);
 				
-				// the new area we can paint on is itself minus the second border width 
+				// the new area we can paint on is itself minus the first border width 
 				insideRectangle = new Rectangle(insideRectangle.x
 						+ borderWidthToPaint, insideRectangle.y
 						+ borderWidthToPaint, insideRectangle.width
@@ -640,7 +640,7 @@ public class CustomButton extends Canvas {
 					// to make the rounded corners of the two borders have the right proportions between them I followed this technique:
 					// http://webdesign.tutsplus.com/tutorials/quick-tip-rounded-corners-done-right--webdesign-7127
 					// so innerRadius = outerRadius - gapBetweenCorners
-					// where gapBetweenCorners is the inner border width
+					// where gapBetweenCorners is the first border width
 					int innerRadius = roundedCornersRadius - borderWidthToPaint;
 					
 					// draw a rounded rectangle inside our paintable area with the color of the second border
